@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import os
 import glob
 import boto3
-
+import smtplib
 def flvtomp4(req):
     os.system('aws s3 sync s3://new-image-profile /home/rohtash/flv --exclude "*" --include "*.flv"')
     for name in glob.glob('/home/rohtash/flv/*'):
@@ -17,5 +17,11 @@ def flvtomp4(req):
         )
         os.system('rm /home/rohtash/mp4/'+name+'.mp4')
         os.system('rm /home/rohtash/flv/'+name+'.mp4')
-
+        message = "submite"
+        s = smtplib.SMTP('smtp.gmail.com',587)
+        s.starttls()
+        s.login("rraghav476@gmail.com","password")
+        s.sendmail("rraghav476@gmail.com","rraghav476@gmail.com",message)
+        s.quit()
+        print("msg send")
     return JsonResponse({"msg":"success","data":"convert to mp4"})
